@@ -7,7 +7,7 @@ const app = express()
 const port = 3000
 const logger = pino()
 
-logger.info('Hello, World!')
+logger.info('Start api!')
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
