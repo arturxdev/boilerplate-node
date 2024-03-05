@@ -9,11 +9,13 @@ datasource db {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model applied {
-  id         BigInt   @id(map: "Applied_pkey") @default(autoincrement())
+  id         Int      @id(map: "Applied_pkey") @default(autoincrement())
   created_at DateTime @default(now()) @db.Timestamptz(6)
   post_link  String?  @db.VarChar
   client     Json?    @default("{}") @db.Json
   awardId    Int?
+  accepted   Boolean?
+  code       String?
   award      award?   @relation(fields: [awardId], references: [id], onUpdate: NoAction, map: "public_Applied_awardId_fkey")
 }
 
