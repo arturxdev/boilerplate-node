@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model applied {
+  id         BigInt   @id(map: "Applied_pkey") @default(autoincrement())
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  post_link  String?  @db.VarChar
+  client     Json?    @default("{}") @db.Json
+  awardId    Int?
+  award      award?   @relation(fields: [awardId], references: [id], onUpdate: NoAction, map: "public_Applied_awardId_fkey")
+}
+
+model award {
+  id            Int             @id @default(autoincrement())
+  title         String?         @db.VarChar
+  description   String?         @db.VarChar
+  img           String?
+  toReddem      Float?          @db.Real
+  createdAt     DateTime?       @default(now()) @db.Timestamp(6)
+  applied       applied[]
+  awardCampaign awardCampaign[]
+}
+
+model awardCampaign {
+  id         Int       @id @default(autoincrement())
+  campaignId Int?
+  awardId    Int?
+  createdAt  DateTime? @default(now()) @db.Timestamp(6)
+  award      award?    @relation(fields: [awardId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "awardCampaign_awardId_award_id_fk")
+  campaign   campaign? @relation(fields: [campaignId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "awardCampaign_campaignId_campaign_id_fk")
+}
+
+model campaign {
+  id            Int             @id @default(autoincrement())
+  title         String?         @db.VarChar
+  description   String?         @db.VarChar
+  img           String?         @db.VarChar
+  steps         String?
+  companyId     Int?
+  awardCampaign awardCampaign[]
+  company       company?        @relation(fields: [companyId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "campaign_companyId_company_id_fk")
+}
+
+model company {
+  id            Int        @id @default(autoincrement())
+  name          String?    @db.VarChar
+  img           String?    @db.VarChar
+  createdAt     DateTime?  @default(now()) @db.Timestamp(6)
+  instagram_url BigInt?    @unique
+  campaign      campaign[]
+}
