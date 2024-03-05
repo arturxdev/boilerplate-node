@@ -5,9 +5,9 @@ import { PrismaClient } from "@prisma/client";
 
 const app = express()
 const port = 3000
-const logger = pino()
+// const logger = pino()
 
-logger.info('Start api!')
+// logger.info('Start api!')
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
@@ -37,9 +37,9 @@ app.get('/company/award', async (req, res) => {
   return
 })
 
-for (const endpoint of listEndpoints(app)) {
-  logger.info(`${endpoint.methods} ${endpoint.path}`)
-}
+// for (const endpoint of listEndpoints(app)) {
+//   logger.info(`${endpoint.methods} ${endpoint.path}`)
+// }
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
